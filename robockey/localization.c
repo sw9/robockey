@@ -1,5 +1,6 @@
 #include "localization.h"
 #include "m_wii.h"
+#include "navigation.h"
 #include <math.h>
 
 char get_location(unsigned int* arr, float* result) {
@@ -69,9 +70,9 @@ char get_location(unsigned int* arr, float* result) {
 	float rad = acos(y_axis_y/sqrt(pow(y_axis_x, 2) + pow(y_axis_y, 2)));
 
 	if (y_axis_x > 0) {
-		result[3] = -rad*57.2958;
+		result[3] = -rad*DEG_PER_RAD;
 	} else {
-		result[3] = rad*57.2958;
+		result[3] = rad*DEG_PER_RAD;
 	}
 	return ret;
 }
