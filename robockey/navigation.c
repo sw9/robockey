@@ -19,28 +19,21 @@ void full_forward(void) {
     clear(PORTC, 7);
     set(PORTC, 6); // enable motors
     set(PORTE, 6); // motor 1 in forward direction
-    set(PORTD, 4);
-    OCR1B = 0x00FF;
-    OCR1A = 0x00FF;		
+    clear(PORTD, 4);
+    OCR1B = UP_TO;
+    OCR1A = UP_TO;
 }
 
 void navigation_angle(float deg) {
-    set(PORTB, 4); // motor 2 in forward direction
-    clear(PORTC, 7);
-    set(PORTC, 6); // enable motors
-    set(PORTE, 6); // motor 1 in forward direction
-	set(PORTD, 4);
-    
+	full_forward();    
     float frac = (180-fabs(deg))/(180.0);
     
 	if (deg > 0) {
 		/* turn towards the left */
-        OCR1A = round(0x00FF*frac);
-        OCR1B = 0x00FF;
+        OCR1A = round(UP_TO*frac);
 	} else {
 		/* turn towards the right */
-        OCR1A = 0x00FF;
-        OCR1B = round(0x00FF*frac);
+        OCR1B = round(UP_TO*frac);
 	}
 }
 

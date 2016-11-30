@@ -7,13 +7,15 @@
 
 volatile bool flag = false;
 
-int state = STANDBY;
+int state;
 unsigned int blobs[12];
 char buffer[10];
 float result[3];
 bool side_change = false;
 
 void init(void) {
+	state = PLAY;
+
 	// set clock to 16 MHz
 	m_clockdivide(0);
 		
@@ -73,7 +75,7 @@ int main(void)
 			flag = 0;
 		}
 		
-		if(STANDBY) {
+		if(state == STANDBY) {
 			stop_motors();			
 		}
 		
@@ -83,10 +85,10 @@ int main(void)
 		}
 		
 		if (state == PLAY) {
-			play_game();
+			// play_game();
+			full_forward();
 		}
 		
-		full_forward();
 		m_wait(100);
 	}
 }
