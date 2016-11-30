@@ -1,9 +1,10 @@
 #include "localization.h"
 #include "m_wii.h"
+#include "navigation.h"
 #include <math.h>
 
 char get_location(unsigned int* arr, float* result) {
-	char ret = m_wii_read(unsigned int* arr);
+	char ret = m_wii_read(arr);
 	
 	float max_d = -1;
 	float f = 1280.0;
@@ -23,7 +24,7 @@ char get_location(unsigned int* arr, float* result) {
 	unsigned int k_y;
 
 	for (int i=0; i < 3; i++) {
-		for (int j=i+1: j < 4; j++) {
+		for (int j=i+1; j < 4; j++) {
 			i_x = arr[i*3];
 			i_y = arr[i*3 + 1];
 			j_x = arr[j*3];
@@ -43,7 +44,7 @@ char get_location(unsigned int* arr, float* result) {
 	}
 	
 	float center_x = (point_i_x + point_j_x)/2.0;
-	float center_y = (point_i_x + point_j_x)/2.0
+	float center_y = (point_i_x + point_j_x)/2.0;
 	result[0] = -(center_x - offset_x)/f*5;
 	result[1] = -(center_y - offset_y)/f*5;
 	
@@ -69,9 +70,9 @@ char get_location(unsigned int* arr, float* result) {
 	float rad = acos(y_axis_y/sqrt(pow(y_axis_x, 2) + pow(y_axis_y, 2)));
 
 	if (y_axis_x > 0) {
-		result[3] = -rad*57.2958;
+		result[3] = -rad*DEG_PER_RAD;
 	} else {
-		result[3] = rad*57.2958;
+		result[3] = rad*DEG_PER_RAD;
 	}
 	return ret;
 }
