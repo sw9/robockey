@@ -10,18 +10,18 @@ char get_location(unsigned int* arr, float* result) {
 	float f = 1280.0;
 	unsigned int offset_x = 512;
 	unsigned int offset_y = 384;
-	unsigned int ind_i;
-	unsigned int ind_j;
-	unsigned int point_i_x;
-	unsigned int point_i_y;
-	unsigned int point_j_x;
-	unsigned int point_j_y;
-	unsigned int i_x;
-	unsigned int i_y;
-	unsigned int j_x;
-	unsigned int j_y;
-	unsigned int k_x;
-	unsigned int k_y;
+	unsigned int ind_i = 0;
+	unsigned int ind_j = 0;
+	unsigned int point_i_x = 0;
+	unsigned int point_i_y = 0;
+	unsigned int point_j_x = 0;
+	unsigned int point_j_y = 0;
+	unsigned int i_x = 0;
+	unsigned int i_y = 0;
+	unsigned int j_x = 0;
+	unsigned int j_y = 0;
+	unsigned int k_x = 0;
+	unsigned int k_y = 0;
 
 	for (int i=0; i < 3; i++) {
 		for (int j=i+1; j < 4; j++) {
