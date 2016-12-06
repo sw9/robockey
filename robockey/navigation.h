@@ -8,9 +8,9 @@ void init_motors(void);
 
 void full_forward(void);
 
-void navigation_angle(float deg);
+void navigation_angle(double deg);
 
-void navigation_point(unsigned int* arr, float to_x, float to_y);
+void navigation_point(double* arr, double to_x, double to_y);
 
 void navigation_puck(void);
 

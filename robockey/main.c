@@ -6,7 +6,7 @@
 #include "localization.h"
 #include "m_usb.h"
 #include "puck_detection.h"
-#include <stdlib.h>
+#include <stdbool.h>
 
 volatile bool flag = false;
 int state;
@@ -14,11 +14,14 @@ unsigned int blobs[12];
 char buffer[10];
 double result[3];
 bool side_change = false;
-const double red_x = 120.0;
-const double blue_x = -red_x;
-const address = 112;
+double red_x = 120.0;
+double blue_x;
+int address = 112;
+double puck_decay = 0.0;
 
 void init(void) {
+	blue_x = -red_x;
+
 	state = STANDBY;
 	// set clock to 16 MHz
 	m_clockdivide(0);
@@ -34,11 +37,20 @@ void init(void) {
 }
 
 void play_game(void) {
-	if (not_enough_stars(blobs)) {
-		full_forward();
+	if (puck_decay < 0.5) {
+		navigation_puck();
 	} else {
-		navigation_point(result, red_x, 0.0);
+		if (not_enough_stars(blobs)) {
+			full_forward();
+			} else {
+				if (on_red_side()) {
+					navigation_point(result, red_x, 0.0);					
+				} else {
+					navigation_point(result, blue_x, 0.0);
+				}
+		}
 	}
+	puck_decay *= 0.95;
 }
 
 int main(void)
@@ -51,16 +63,20 @@ int main(void)
 			flag = 0;
 		}
 		
+		if (has_puck()) {
+			puck_decay = 1.0;
+		}
+		
 		if(state == STANDBY) {
 			stop_motors();
-		}
-				
+		}				
 		get_location(blobs, result);
+		
 		if (state == PLAY) {
 			play_game();
 		}
 		
-		m_wait(1000);
+		m_wait(250);
 	}
 }
 

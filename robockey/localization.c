@@ -3,8 +3,8 @@
 #include "navigation.h"
 #include <math.h>
 #include "m_general.h"
-#include <stdlib.h>
-#include "m_usb.h"	
+#include "m_usb.h"
+#include <stdbool.h>
 
 int x_left = 860;
 int x_right = 258;

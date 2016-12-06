@@ -56,10 +56,10 @@ void full_forward(void) {
 	OCR1C = UP_TO;
 }
 
-void navigation_angle(float deg) {
+void navigation_angle(double deg) {
 	full_forward();
 
-	float frac = (180-fabs(deg))/(180.0);
+	double frac = (180-fabs(deg))/(180.0);
     
 	if (deg > 0) {
 		/* turn towards the left */
@@ -75,17 +75,18 @@ void stop_motors(void) {
 }
 
 void navigation_puck(void) {
-	
+	double angle = puck_angle();
+	navigation_angle(angle);
 }
 
-void navigation_point(unsigned int* arr, float to_x, float to_y) {
-	float from_x = arr[0];
-	float from_y = arr[1];
-	float deg = arr[2];
-	float x = to_x - from_x;
-	float y = to_y - from_y;
+void navigation_point(double* arr, double to_x, double to_y) {
+	double from_x = arr[0];
+	double from_y = arr[1];
+	double deg = arr[2];
+	double x = to_x - from_x;
+	double y = to_y - from_y;
 	
-	float rad = acos(y/(sqrt(pow(x, 2) + pow(y, 2))));
+	double rad = acos(y/(sqrt(pow(x, 2) + pow(y, 2))));
 	
 	/* assume y axis points to front of device */
 	rad = x < 0 ? -rad : rad;

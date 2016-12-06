@@ -1,7 +1,6 @@
 #ifndef localization__
 #define localization__
-
-#include <stdlib.h>
+#include <stdbool.h>
 
 char get_location(unsigned int* arr, double* result);
 // FUNCTIONALITY:

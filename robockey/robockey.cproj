@@ -166,6 +166,12 @@
     <Compile Include="navigation.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="puck_detection.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="puck_detection.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
