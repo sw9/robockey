@@ -25,8 +25,8 @@ void full_forward(void) {
 }
 
 void navigation_angle(float deg) {
-	full_forward();    
-    float frac = (180-fabs(deg))/(180.0);
+	full_forward();   
+	float frac = (180-fabs(deg))/(180.0);
     
 	if (deg > 0) {
 		/* turn towards the left */
@@ -48,6 +48,6 @@ void navigation_point(float from_x, float from_y, float deg, float to_x, float t
 	float rad = acos(y/(sqrt(pow(x, 2) + pow(y, 2))));
 	
 	/* assume y axis points to front of device */
-	rad = x < 0 ? rad : -rad;
+	rad = x < 0 ? -rad : rad;
 	navigation_angle(rad*DEG_PER_RAD - deg);
 }

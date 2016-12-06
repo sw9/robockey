@@ -4,17 +4,21 @@
 #include "communication.h"
 #include "navigation.h"
 #include "localization.h"
+#include "m_usb.h"
+#include <stdlib.h>
 
 volatile bool flag = false;
 
 int state;
 unsigned int blobs[12];
 char buffer[10];
-float result[3];
+double result[3];
 bool side_change = false;
 
 void init(void) {
 	state = PLAY;
+	
+	m_usb_init();
 
 	// set clock to 16 MHz
 	m_clockdivide(0);
@@ -22,12 +26,7 @@ void init(void) {
 	// enable interrupts
 	sei();
 		
-	char ret = m_wii_open();
-	
-	if (ret == 0) {
-		m_red(ON);
-	}
-	
+	m_wii_open();
 	m_rf_open(1, 112, 10);
 	
 	// enabled output pins
@@ -61,8 +60,7 @@ void init(void) {
 }
 
 void play_game(void) {
-	get_location(blobs, result);
-	navigation_point(result[0], result[1], result[2], 0.0, -115.0);
+	navigation_point(result[0], result[1], result[2], 150.0, 0.0);
 }
 
 int main(void)
@@ -80,16 +78,27 @@ int main(void)
 		}
 		
 		if (state == COMMTEST) {
-			state = STANDBY;
-			
+			state = STANDBY;	
 		}
+		
+		
+		get_location(blobs, result);
+		/*m_usb_tx_string("x\n");
+		m_usb_tx_int(result[0]);
+		m_usb_tx_string("\n");
+		m_usb_tx_string("y\n");
+		m_usb_tx_int(result[1]);
+		m_usb_tx_string("\n");
+		m_usb_tx_string("angle\n");
+		m_usb_tx_int(result[2]);
+		m_usb_tx_string("\n");*/
 		
 		if (state == PLAY) {
-			// play_game();
-			full_forward();
+			play_game();
+			// full_forward();
 		}
 		
-		m_wait(100);
+		m_wait(1000);
 	}
 }
 
