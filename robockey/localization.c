@@ -13,6 +13,18 @@ int y_down = 215;
 int x_mid = 532;
 int y_mid = 365;
 
+bool not_enough_stars(unsigned int* arr) {
+	bool ret = false;
+	for (int i=0; i < 3; i++) {
+		int i_x = arr[i*3];
+		int i_y = arr[i*3 + 1];
+		if (i_x == 1023 && i_y == 1023) {
+			ret = true;
+		}
+	}
+	return ret;
+}
+
 char get_location(unsigned int* arr, double* result) {
 	char ret = m_wii_read(arr);
 	
@@ -28,7 +40,6 @@ char get_location(unsigned int* arr, double* result) {
 	int point_i_y = 0;
 	int point_j_x = 0;
 	int point_j_y = 0;
-	bool not_enough_stars = false;
 
 	/* for (int i = 0; i < 4; i++) {
 		m_usb_tx_int(arr[i*3]);
@@ -49,10 +60,6 @@ char get_location(unsigned int* arr, double* result) {
 
 			double d = pow((i_x - j_x), 2) + pow((i_y - j_y), 2);
 			d = sqrt(d);
-
-			if (i_x == 1023 && i_y == 1023) {
-				not_enough_stars = true;
-			}
 			
 			if (d > max_d) {
 				ind_i = i;
@@ -66,7 +73,7 @@ char get_location(unsigned int* arr, double* result) {
 		}
 	}
 	
-	if (not_enough_stars) {
+	if (not_enough_stars(arr)) {
 		m_green(ON);
 	} else {
 		m_green(OFF);
@@ -121,5 +128,6 @@ char get_location(unsigned int* arr, double* result) {
 	m_usb_tx_string("y\n");
 	m_usb_tx_int(result[2]);
 	m_usb_tx_string("rot\n");
+	
 	return ret;
 }

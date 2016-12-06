@@ -4,9 +4,10 @@
 #include "m_rf.h"
 
 #define STANDBY 0
-#define COMMTEST 1
-#define PLAY 2
+#define PLAY 1
 
-char read_instruction(char * buffer, int * state, bool * side_change);
+void init_led(void);
+
+char read_instruction(char * buffer, int * state);
 
 #endif

@@ -1,31 +1,64 @@
 #include "navigation.h"
 #include "m_general.h"
 #include <math.h>
+#include "localization.h"
+#include "puck_detection.h"
 
 /*
  M2 is left motor
  M1 is right motor
  B5 = m2 pwm, controlled by OC1A
- B4 = m2 in1, controlled by OC1B
- C7 = m2 in2
- C6 = en
- B6 = m1 pwm
- E6 = m1 in1
- D4 = m1 in2
+ B2 = m2 in1, controlled by OC1B
+ C6 = m2 in2
+ C7 = en
+ B7 = m1 pwm
+ B0 = m1 in1
+ D3 = m1 in2
 */
 
+void init_motors(void) {
+	set(DDRB, 5);
+    set(DDRB, 2);
+	set(DDRC, 6);
+	set(DDRC, 7);
+    set(DDRB, 7);
+	set(DDRB, 0);
+	set(DDRD, 3);
+	
+	// setup timer 1
+	// set clock pre-scaler to 1
+	clear(TCCR1B, CS12);
+	clear(TCCR1B, CS11);
+	set(TCCR1B, CS10);
+
+	// mode 7
+	clear(TCCR1B, WGM13);
+	set(TCCR1B, WGM12);
+	set(TCCR1A, WGM11);
+	set(TCCR1A, WGM10);
+
+	// clear at OCR1A, set at rollover
+	set(TCCR1A, COM1A1);
+	clear(TCCR1A, COM1A0);
+	
+	// clear at OCR1C, set at rollover
+	set(TCCR1A, COM1C1);
+	clear(TCCR1A, COM1C0);
+}
+
 void full_forward(void) {
-    set(PORTB, 4); // motor 2 in forward direction
-    clear(PORTC, 7);
-    set(PORTC, 6); // enable motors
-    set(PORTE, 6); // motor 1 in forward direction
-    clear(PORTD, 4);
-    OCR1B = UP_TO;
+    set(PORTB, 2); // motor 2 in forward direction
+    clear(PORTC, 6);
+    set(PORTC, 7); // enable motors
+    set(PORTB, 0); // motor 1 in forward direction
+    clear(PORTD, 3);
     OCR1A = UP_TO;
+	OCR1C = UP_TO;
 }
 
 void navigation_angle(float deg) {
-	full_forward();   
+	full_forward();
+
 	float frac = (180-fabs(deg))/(180.0);
     
 	if (deg > 0) {
@@ -33,15 +66,22 @@ void navigation_angle(float deg) {
         OCR1A = round(UP_TO*frac);
 	} else {
 		/* turn towards the right */
-        OCR1B = round(UP_TO*frac);
+        OCR1C = round(UP_TO*frac);
 	}
 }
 
 void stop_motors(void) {
-	clear(PORTC, 6);
+	clear(PORTC, 7);
 }
 
-void navigation_point(float from_x, float from_y, float deg, float to_x, float to_y) {
+void navigation_puck(void) {
+	
+}
+
+void navigation_point(unsigned int* arr, float to_x, float to_y) {
+	float from_x = arr[0];
+	float from_y = arr[1];
+	float deg = arr[2];
 	float x = to_x - from_x;
 	float y = to_y - from_y;
 	
@@ -49,5 +89,6 @@ void navigation_point(float from_x, float from_y, float deg, float to_x, float t
 	
 	/* assume y axis points to front of device */
 	rad = x < 0 ? -rad : rad;
+	
 	navigation_angle(rad*DEG_PER_RAD - deg);
 }
