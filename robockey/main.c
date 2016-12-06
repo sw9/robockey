@@ -44,9 +44,9 @@ void play_game(void) {
 			full_forward();
 			} else {
 				if (on_red_side()) {
-					navigation_point(result, red_x, 0.0);					
+					navigation_point(result, blue_x, 0.0);					
 				} else {
-					navigation_point(result, blue_x, 0.0);
+					navigation_point(result, red_x, 0.0);
 				}
 		}
 	}
