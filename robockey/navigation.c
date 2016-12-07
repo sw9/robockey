@@ -58,15 +58,29 @@ void full_forward(void) {
 
 void navigation_angle(double deg) {
 	full_forward();
-
-	double frac = (180-fabs(deg))/(180.0);
-    
+	double frac;
 	if (deg > 0) {
 		/* turn towards the left */
-        OCR1A = round(UP_TO*frac);
+		if (deg < 90) {
+			frac = (90-fabs(deg))/(90.0);
+			OCR1A = round(UP_TO*frac);
+		} else {
+			frac = (fabs(deg) - 90)/(90.0);
+			OCR1A = round(UP_TO*frac);
+			clear(PORTB, 2);
+			set(PORTC, 6);
+		}
 	} else {
 		/* turn towards the right */
-        OCR1C = round(UP_TO*frac);
+		if (deg > -90) {
+			frac = (90-fabs(deg))/(90.0);
+			OCR1C = round(UP_TO*frac);
+		} else {
+			frac = (fabs(deg) - 90)/(90.0);
+			clear(PORTB, 0);
+		    set(PORTD, 3);
+			OCR1C = round(UP_TO*frac);
+		}		
 	}
 }
 

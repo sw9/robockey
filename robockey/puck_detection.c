@@ -112,8 +112,6 @@ double puck_angle(void) {
 	}
 	
 	double ret = angles[max_ind];
-	int before;
-	int after;
 	double total;
 	double min = 1024.0;
 	for (int i = 1; i < num_detectors; i++) {
