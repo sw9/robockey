@@ -41,15 +41,6 @@ char get_location(unsigned int* arr, double* result) {
 	int point_j_x = 0;
 	int point_j_y = 0;
 
-	/* for (int i = 0; i < 4; i++) {
-		m_usb_tx_int(arr[i*3]);
-		m_usb_tx_string("\t");
-
-		m_usb_tx_int(arr[i*3+1]);
-		m_usb_tx_string("\t");
-	}
-	m_usb_tx_string("\n");*/
-
 	for (int i=0; i < 3; i++) {
 		for (int j=i+1; j < 4; j++) {
 

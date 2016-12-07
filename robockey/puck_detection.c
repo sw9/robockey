@@ -1,8 +1,9 @@
 #include "m_general.h"
 #include <stdbool.h>
+#include "m_usb.h"
 
 int adc_vals[7];
-double angles[7] = {0.0, -45.0, -90.0, -135.0, 135.0, 90.0, 45.0};
+double angles[7] = {0.0, -45.0, -90.0, -135.0, -225.0, -270.0, -315.0};
 int num_detectors = 7;
 
 bool has_puck(void) {
@@ -114,17 +115,27 @@ double puck_angle(void) {
 	int before;
 	int after;
 	double total;
-	if 	(max_ind == 0) {
-		before = num_detectors - 1;
-		after = 1;
-	} else {
-		before = (max_ind - 1) % num_detectors;
-		after = (max_ind + 1) % num_detectors;
-		before = before == 0 ? num_detectors - 1 : before;
-		after = after == 0 ? 1 : after;
+	double min = 1024.0;
+	for (int i = 1; i < num_detectors; i++) {
+		if (adc_vals[i] < min) {
+			min = adc_vals[i];
+		}
 	}
-	total = adc_vals[before] + adc_vals[after];
-	ret += (angles[before] - ret)*adc_vals[before]/total +
-	(angles[after] - ret)*adc_vals[after]/total;
+	
+	for (int i = 1; i < num_detectors; i++) {
+		total += adc_vals[i] - min;
+	}
+	
+	for (int i = 1; i < num_detectors; i++) {
+		ret += (adc_vals[i] - min)/total*angles[i];
+	}
+	
+	if (ret < -180) {
+		ret += 360;
+	}
+	
+	m_usb_tx_int(ret);
+	m_usb_tx_string("puck \n");
+	
 	return ret;
 }
