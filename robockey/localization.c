@@ -72,7 +72,12 @@ char get_location(unsigned int* arr, double* result) {
 	
 	double center_x = (point_i_x + point_j_x)/2.0;
 	double center_y = (point_i_y + point_j_y)/2.0;
-
+	
+	m_usb_tx_int(center_x);
+	m_usb_tx_string(" x\n");
+	m_usb_tx_int(center_y);
+	m_usb_tx_string(" y\n");
+	
 	double i_sum = 0;
 	double j_sum = 0;
 	for (int k=0; k < 4; k++) {
@@ -98,11 +103,6 @@ char get_location(unsigned int* arr, double* result) {
 		result[2] = rad*DEG_PER_RAD;
 	}
 	
-	/*m_usb_tx_int((int) i_sum);
-	m_usb_tx_string(" i_sum \n");
-	m_usb_tx_int((int) j_sum);
-	m_usb_tx_string(" j_sum \n");*/
-
 	double old_x = center_x - x_mid;
 	double old_y = center_y - y_mid;
 	
@@ -112,13 +112,6 @@ char get_location(unsigned int* arr, double* result) {
 
 	result[0] = -(center_x - x_avg)*x_mul;
 	result[1] = -(center_y - y_avg)*y_mul;
-
-	m_usb_tx_int(result[0]);
-	m_usb_tx_string("x\n");
-	m_usb_tx_int(result[1]);
-	m_usb_tx_string("y\n");
-	m_usb_tx_int(result[2]);
-	m_usb_tx_string("rot\n");
 	
 	return ret;
 }

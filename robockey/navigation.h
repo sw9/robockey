@@ -2,7 +2,7 @@
 #define navigation__
 
 #define DEG_PER_RAD 57.2958
-#define UP_TO 0x03FF
+#define UP_TO 0x3FF
 
 void init_motors(void);
 

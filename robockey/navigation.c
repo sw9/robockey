@@ -3,6 +3,7 @@
 #include <math.h>
 #include "localization.h"
 #include "puck_detection.h"
+#include "m_usb.h"
 
 /*
  M2 is left motor
@@ -27,9 +28,9 @@ void init_motors(void) {
 	
 	// setup timer 1
 	// set clock pre-scaler to 1
-	clear(TCCR1B, CS12);
+	set(TCCR1B, CS12);
 	clear(TCCR1B, CS11);
-	set(TCCR1B, CS10);
+	clear(TCCR1B, CS10);
 
 	// mode 7
 	clear(TCCR1B, WGM13);
@@ -47,14 +48,25 @@ void init_motors(void) {
 }
 
 void full_forward(void) {
-    set(PORTB, 2); // motor 2 in forward direction
-    clear(PORTC, 6);
+    clear(PORTB, 2); // motor 2 in forward direction
+    set(PORTC, 6);
     set(PORTC, 7); // enable motors
     set(PORTB, 0); // motor 1 in forward direction
     clear(PORTD, 3);
     OCR1A = UP_TO;
 	OCR1C = UP_TO;
 }
+
+void full_backward(void) {
+	set(PORTB, 2); // motor 2 in forward direction
+	clear(PORTC, 6);
+	set(PORTC, 7); // enable motors
+	clear(PORTB, 0); // motor 1 in forward direction
+	set(PORTD, 3);
+	OCR1A = UP_TO;
+	OCR1C = UP_TO;
+}
+
 
 void navigation_angle(double deg) {
 	full_forward();
@@ -67,8 +79,8 @@ void navigation_angle(double deg) {
 		} else {
 			frac = (fabs(deg) - 90)/(90.0);
 			OCR1A = round(UP_TO*frac);
-			clear(PORTB, 2);
-			set(PORTC, 6);
+			set(PORTB, 2);
+			clear(PORTC, 6);
 		}
 	} else {
 		/* turn towards the right */
@@ -80,7 +92,7 @@ void navigation_angle(double deg) {
 			clear(PORTB, 0);
 		    set(PORTD, 3);
 			OCR1C = round(UP_TO*frac);
-		}		
+		}
 	}
 }
 

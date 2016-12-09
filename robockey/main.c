@@ -1,3 +1,5 @@
+#define F_CPU 16000000
+
 #include "m_general.h"
 #include "m_wii.h"
 #include "m_rf.h"
@@ -17,7 +19,7 @@ bool side_change = false;
 double red_x = 120.0;
 double blue_x;
 int address = 112;
-double puck_decay = 0.0;
+int puck_counter = 0;
 
 void init(void) {
 	blue_x = -red_x;
@@ -37,20 +39,22 @@ void init(void) {
 }
 
 void play_game(void) {
-	if (puck_decay < 0.5) {
+	if (puck_counter == 0) {
+		m_red(OFF);
 		navigation_puck();
 	} else {
+		m_red(ON);
 		if (not_enough_stars(blobs)) {
 			full_forward();
+		} else {
+			if (on_red_side()) {
+				navigation_point(result, blue_x, 0.0);					
 			} else {
-				if (on_red_side()) {
-					navigation_point(result, blue_x, 0.0);					
-				} else {
-					navigation_point(result, red_x, 0.0);
-				}
+				navigation_point(result, red_x, 0.0);
+			}
 		}
+		puck_counter--;
 	}
-	puck_decay *= 0.95;
 }
 
 int main(void)
@@ -64,16 +68,18 @@ int main(void)
 		}
 		
 		if (has_puck()) {
-			puck_decay = 1.0;
+			puck_counter = 12;
 		}
-		
+				
 		if(state == STANDBY) {
 			stop_motors();
-		}				
+		}
 		get_location(blobs, result);
 		
 		if (state == PLAY) {
 			play_game();
+			// full_forward();
+			// navigation_angle(-170);
 		}
 		
 		m_wait(250);

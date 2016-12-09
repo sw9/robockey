@@ -3,7 +3,7 @@
 #include "m_usb.h"
 
 int adc_vals[7];
-double angles[7] = {0.0, -45.0, -90.0, -135.0, -225.0, -270.0, -315.0};
+double angles[7] = {0.0, 32.0, 76.0, 145.0, -145.0, -76.0, -32.0};
 int num_detectors = 7;
 
 bool has_puck(void) {
@@ -101,39 +101,22 @@ double puck_angle(void) {
 	// ADC values are between 0 and 1023
 	
 	get_adc_values(adc_vals);
-	int max_ind = 0;
-	int max_val = -1;
+		
+	for (int i = 0; i < num_detectors; i++) {
+		adc_vals[i] = 1023 - adc_vals[i];	
+	}
 	
+	int max_ind = 0;
+	double max_val = 0.0;
 	for (int i = 0; i < num_detectors; i++) {
 		if (adc_vals[i] > max_val) {
-			max_val = adc_vals[i];
 			max_ind = i;
+			max_val = adc_vals[i];
 		}
+		// m_usb_tx_int(adc_vals[i]);
+		// m_usb_tx_string("\t");
 	}
+	// m_usb_tx_string("\n");
 	
-	double ret = angles[max_ind];
-	double total;
-	double min = 1024.0;
-	for (int i = 1; i < num_detectors; i++) {
-		if (adc_vals[i] < min) {
-			min = adc_vals[i];
-		}
-	}
-	
-	for (int i = 1; i < num_detectors; i++) {
-		total += adc_vals[i] - min;
-	}
-	
-	for (int i = 1; i < num_detectors; i++) {
-		ret += (adc_vals[i] - min)/total*angles[i];
-	}
-	
-	if (ret < -180) {
-		ret += 360;
-	}
-	
-	m_usb_tx_int(ret);
-	m_usb_tx_string("puck \n");
-	
-	return ret;
+	return angles[max_ind];
 }
