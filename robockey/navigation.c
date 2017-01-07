@@ -53,8 +53,8 @@ void full_forward(void) {
     set(PORTC, 7); // enable motors
     set(PORTB, 0); // motor 1 in forward direction
     clear(PORTD, 3);
-    OCR1A = UP_TO;
-	OCR1C = UP_TO;
+    OCR1A = MAX_PWM;
+	OCR1C = MAX_PWM;
 }
 
 void full_backward(void) {
@@ -63,22 +63,22 @@ void full_backward(void) {
 	set(PORTC, 7); // enable motors
 	clear(PORTB, 0); // motor 1 in forward direction
 	set(PORTD, 3);
-	OCR1A = UP_TO;
-	OCR1C = UP_TO;
+	OCR1A = MAX_PWM;
+	OCR1C = MAX_PWM;
 }
 
 
-void navigation_angle(double deg) {
+void navigation_angle(double deg, int up_to) {
 	full_forward();
 	double frac;
 	if (deg > 0) {
 		/* turn towards the left */
 		if (deg < 90) {
 			frac = (90-fabs(deg))/(90.0);
-			OCR1A = round(UP_TO*frac);
+			OCR1A = round(up_to*frac);
 		} else {
 			frac = (fabs(deg) - 90)/(90.0);
-			OCR1A = round(UP_TO*frac);
+			OCR1A = round(up_to*frac);
 			set(PORTB, 2);
 			clear(PORTC, 6);
 		}
@@ -86,12 +86,12 @@ void navigation_angle(double deg) {
 		/* turn towards the right */
 		if (deg > -90) {
 			frac = (90-fabs(deg))/(90.0);
-			OCR1C = round(UP_TO*frac);
+			OCR1C = round(up_to*frac);
 		} else {
 			frac = (fabs(deg) - 90)/(90.0);
 			clear(PORTB, 0);
 		    set(PORTD, 3);
-			OCR1C = round(UP_TO*frac);
+			OCR1C = round(up_to*frac);
 		}
 	}
 }
@@ -102,7 +102,7 @@ void stop_motors(void) {
 
 void navigation_puck(void) {
 	double angle = puck_angle();
-	navigation_angle(angle);
+	navigation_angle(angle, 256);
 }
 
 void navigation_point(double* arr, double to_x, double to_y) {
@@ -117,5 +117,5 @@ void navigation_point(double* arr, double to_x, double to_y) {
 	/* assume y axis points to front of device */
 	rad = x < 0 ? -rad : rad;
 	
-	navigation_angle(rad*DEG_PER_RAD - deg);
+	navigation_angle(rad*DEG_PER_RAD - deg, MAX_PWM);
 }

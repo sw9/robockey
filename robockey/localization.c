@@ -73,10 +73,10 @@ char get_location(unsigned int* arr, double* result) {
 	double center_x = (point_i_x + point_j_x)/2.0;
 	double center_y = (point_i_y + point_j_y)/2.0;
 	
-	m_usb_tx_int(center_x);
-	m_usb_tx_string(" x\n");
-	m_usb_tx_int(center_y);
-	m_usb_tx_string(" y\n");
+	// m_usb_tx_int(center_x);
+	// m_usb_tx_string(" x\n");
+	// m_usb_tx_int(center_y);
+	// m_usb_tx_string(" y\n");
 	
 	double i_sum = 0;
 	double j_sum = 0;

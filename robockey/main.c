@@ -29,7 +29,7 @@ void init(void) {
 	m_clockdivide(0);
 	// enable interrupts
 	sei();
-		
+
 	m_usb_init();
 	m_wii_open();
 	m_rf_open(1, address + 0, 10);
@@ -48,7 +48,7 @@ void play_game(void) {
 			full_forward();
 		} else {
 			if (on_red_side()) {
-				navigation_point(result, blue_x, 0.0);					
+				navigation_point(result, blue_x, 0.0);
 			} else {
 				navigation_point(result, red_x, 0.0);
 			}
@@ -66,22 +66,22 @@ int main(void)
 			read_instruction(buffer, &state);
 			flag = 0;
 		}
-		
+
 		if (has_puck()) {
 			puck_counter = 12;
 		}
-				
+
 		if(state == STANDBY) {
 			stop_motors();
 		}
 		get_location(blobs, result);
-		
+
 		if (state == PLAY) {
 			play_game();
 			// full_forward();
 			// navigation_angle(-170);
 		}
-		
+
 		m_wait(250);
 	}
 }

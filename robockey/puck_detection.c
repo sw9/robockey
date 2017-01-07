@@ -113,10 +113,10 @@ double puck_angle(void) {
 			max_ind = i;
 			max_val = adc_vals[i];
 		}
-		// m_usb_tx_int(adc_vals[i]);
-		// m_usb_tx_string("\t");
+		m_usb_tx_int(adc_vals[i]);
+		m_usb_tx_string("\t");
 	}
-	// m_usb_tx_string("\n");
+	m_usb_tx_string("\n");
 	
 	return angles[max_ind];
 }
